@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>AI 职业助手</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h2 {
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, button {
+      margin-top: 5px;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .section {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .summary {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>欢迎使用 AI 职业助手</h2>
+
+  <div class="section">
+    <h3>注册用户</h3>
+    <label>职业 (必填): <input type="text" id="profession"></label>
+    <label>领域: <input type="text" id="field"></label>
+    <label>联系方式: <input type="text" id="contact"></label>
+    <button onclick="register()">注册</button>
+  </div>
+
+  <div class="section">
+    <h3>获取今日推荐</h3>
+    <button onclick="getToday()">获取内容</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function register() {
+      const data = {
+        profession: document.getElementById("profession").value,
+        field: document.getElementById("field").value,
+        contact: document.getElementById("contact").value
+      };
+      fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).then(res => res.json())
+        .then(result => {
+          if (result.user_id) {
+            localStorage.setItem("user_id", result.user_id);
+            alert("注册成功，ID 已保存！");
+          }
+        });
+    }
+
+    function getToday() {
+      const userId = localStorage.getItem("user_id");
+      if (!userId) {
+        alert("请先注册用户！");
+        return;
+      }
+      fetch(`/api/today/${userId}`)
+        .then(res => {
+          if (!res.ok) throw new Error("未找到内容");
+          return res.json();
+        })
+        .then(data => {
+          document.getElementById("result").innerHTML = `
+            <h4>${data.title}</h4>
+            <p class="summary">${data.summary}</p>
+            <strong>建议：</strong><p>${data.suggestion}</p>
+            <p>是否完成：${data.done ? "✅ 已完成" : "❌ 未完成"}</p>
+          `;
+        })
+        .catch(err => {
+          document.getElementById("result").innerHTML = `<p style="color:red;">${err.message}</p>`;
+        });
+    }
+  </script>
+
+</body>
+</html>
