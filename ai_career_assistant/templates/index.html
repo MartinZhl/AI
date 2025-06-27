@@ -45,7 +45,6 @@
     <h3>注册用户</h3>
     <label>职业 (必填): <input type="text" id="profession"></label>
     <label>领域: <input type="text" id="field"></label>
-    <label>联系方式: <input type="text" id="contact"></label>
     <button onclick="register()">注册</button>
   </div>
 
@@ -62,7 +61,7 @@
       const data = {
         profession: document.getElementById("profession").value,
         field: document.getElementById("field").value,
-        contact: document.getElementById("contact").value
+       
       };
       fetch(`${BASE_URL}/api/register`, {
         method: "POST",
