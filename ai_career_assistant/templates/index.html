@@ -5,6 +5,89 @@
   <title>AI 职业助手</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>注册用户</h2>
+
+  <label>职业（必填）:</label>
+  <input type="text" id="job" placeholder="例如：作家、程序员" />
+
+  <label>领域:</label>
+  <input type="text" id="domain" placeholder="例如：写作AI、APP开发" />
+
+  <button onclick="register()">注册</button>
+
+  <h2>获取今日推荐</h2>
+  <button onclick="getRecommendation()">获取内容</button>
+
+  <script>
+    async function register() {
+      const job = document.getElementById('job').value.trim();
+      const domain = document.getElementById('domain').value.trim();
+
+      if (!job) {
+        alert('请填写职业（必填）');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ job, domain })
+        });
+
+        if (!response.ok) {
+          throw new Error('服务器错误');
+        }
+
+        const result = await response.json();
+        alert('注册成功，用户ID: ' + result.user_id);
+      } catch (error) {
+        alert('注册失败: ' + error.message);
+      }
+    }
+
+    async function getRecommendation() {
+      try {
+        const response = await fetch('/api/recommend', {
+          method: 'GET',
+        });
+
+        if (!response.ok) {
+          throw new Error('获取失败');
+        }
+
+        const result = await response.json();
+        alert('推荐内容: ' + result.recommendation);
+      } catch (error) {
+        alert('推荐失败: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>AI 职业助手</title>
+  <style>
+    body {
       font-family: 'Arial', sans-serif;
       max-width: 600px;
       margin: 40px auto;
