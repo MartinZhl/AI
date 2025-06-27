@@ -56,13 +56,15 @@
   </div>
 
   <script>
+    const BASE_URL = "https://ai-career-assistant-1etk.onrender.com";
+
     function register() {
       const data = {
         profession: document.getElementById("profession").value,
         field: document.getElementById("field").value,
         contact: document.getElementById("contact").value
       };
-      fetch("/api/register", {
+      fetch(`${BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -71,7 +73,12 @@
           if (result.user_id) {
             localStorage.setItem("user_id", result.user_id);
             alert("注册成功，ID 已保存！");
+          } else {
+            alert("注册失败，请检查输入。");
           }
+        }).catch(err => {
+          console.error("注册出错：", err);
+          alert("服务器错误！");
         });
     }
 
@@ -81,7 +88,7 @@
         alert("请先注册用户！");
         return;
       }
-      fetch(`/api/today/${userId}`)
+      fetch(`${BASE_URL}/api/today/${userId}`)
         .then(res => {
           if (!res.ok) throw new Error("未找到内容");
           return res.json();
