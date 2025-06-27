@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 APScheduler
 feedparser
 requests
+gunicorn
