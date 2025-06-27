@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: ai-career-assistant
+    env: python
+    buildCommand: "pip install -r ai_career_assistant/requirements.txt"
+    startCommand: "gunicorn ai_career_assistant.app:app"
+    plan: free
