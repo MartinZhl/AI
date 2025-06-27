@@ -130,6 +130,8 @@ def complete_task():
     db.session.commit()
     print(f"Push {push.id} marked as done.")
     return jsonify({'status': 'ok'})
+from flask import Flask, render_template, request, jsonify
+# 其他 import ...
 
 @app.route('/')
 def home():
